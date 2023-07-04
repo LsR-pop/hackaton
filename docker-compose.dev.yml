@@ -1,0 +1,8 @@
+version: '3.2'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:15.3-alpine3.18
+    env_file:
+      - database.env
