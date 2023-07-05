@@ -1,22 +1,22 @@
 version: '3.2'
 
 services:
-    postgres:
-      container_name: postgres
-      image: postgres:15.3-alpine3.18
-      env_file:
-        - database.env
+  postgres:
+    container_name: postgres
+    image: postgres:15.3-alpine3.18
+    env_file:
+      - database.env
 
-    web:
-      container_name: web
-      build:
-        dockerfile: ./docker/web.Dockerfile
+  web:
+    container_name: web
+    build:
+      dockerfile: ./docker/web.Dockerfile
 
-    server:
-      image: traefik:v2.5
-      ports:
-        - 80:80
-        - 443:443
-      volumes:
-        - ./config/traefik.yml:/etc/traefik/traefik.yml
-        - /var/run/docker.sock:/var/run/docker.sock:ro
+  server:
+    image: traefik:v2.5
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./config/traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
