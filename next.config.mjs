@@ -1,9 +1,12 @@
 /** @type {import("next").NextConfig} */
 const config = {
 	reactStrictMode: true,
+	experimental: {
+		serverActions: true,
+	},
 	i18n: {
-		locales: ['en'],
-		defaultLocale: 'en',
+		locales: ['fr'],
+		defaultLocale: 'fr',
 	},
 }
 

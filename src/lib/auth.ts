@@ -1,5 +1,6 @@
 import { type DefaultSession, type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+// import fetch from 'node-fetch'
 
 declare module 'next-auth' {
 	interface Session extends DefaultSession {
@@ -12,9 +13,6 @@ declare module 'next-auth' {
 }
 
 export const authOptions: NextAuthOptions = {
-	session: {
-		strategy: 'jwt',
-	},
 	providers: [
 		CredentialsProvider({
 			name: 'Credentials',
@@ -27,22 +25,27 @@ export const authOptions: NextAuthOptions = {
 				password: { label: 'Password', type: 'password' },
 			},
 			async authorize(credentials, req) {
-				const res = await fetch('http://localhost:3000/api/login', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						email: credentials?.email,
-						password: credentials?.password,
-					}),
-				})
+				try {
+					const res = await fetch('http://localhost:3000/api/login', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							email: credentials?.email,
+							password: credentials?.password,
+						}),
+					})
 
-				const user = await res.json()
+					const user = await res.json()
 
-				if (user) {
-					return user
-				} else {
+					if (user) {
+						return user
+					} else {
+						return null
+					}
+				} catch (err) {
+					console.error(err)
 					return null
 				}
 			},
@@ -56,6 +59,22 @@ export const authOptions: NextAuthOptions = {
 		async session({ session, token }) {
 			session.user = token as any
 			return session
+		},
+	},
+	logger: {
+		error(code, metadata) {
+			console.log('Error:')
+			console.log(`\tCode: ${code}`)
+			console.log(`\tMetadata: ${JSON.stringify(metadata)}`)
+			console.log(`\tError: ${JSON.stringify(metadata.message)}`)
+		},
+		debug(code, metadata) {
+			console.log('Debug:')
+			console.log(`\tCode: ${code}`)
+			console.log(`\tMetadata: ${JSON.stringify(metadata)}`)
+		},
+		warn(code) {
+			console.log(`Code: ${code}`)
 		},
 	},
 }

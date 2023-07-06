@@ -9,6 +9,9 @@ const main = async () => {
 			email: 'des@gmail.com',
 			password: await bcrypt.hash('aZdes58Dokpk', 12),
 			username: 'desssss',
+			player: {
+				create: {},
+			},
 		},
 	})
 }
